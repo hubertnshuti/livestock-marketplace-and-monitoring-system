@@ -46,7 +46,7 @@
                     <h1 class="display-4 fw-bold mb-4">Source Quality Livestock Directly from Farmers</h1>
                     <p class="fs-5 mb-5">Access a wide selection of healthy, verified livestock with complete transparency and traceability.</p>
                     
-                    <a href="#" class="btn btn-green fw-medium py-3 px-5 fs-6 mb-4">
+                    <a href="{% url 'livestock:marketplace' %}" class="btn btn-green fw-medium py-3 px-5 fs-6 mb-4">
                         Browse Available Livestock
                     </a>
                     
@@ -146,15 +146,21 @@
         </div>
     </section>
 
-    <section class="py-5" style="background-color: #f0fdf4;">
-        <div class="container px-4">
-            <div class="row justify-content-center text-center">
-                <div class="col-lg-8">
-                    <h2 class="fs-4 fw-bold text-dark mb-3">Ready to Find Quality Livestock?</h2>
-                    <p class="text-muted mb-4">Join thousands of buyers in our livestock marketplace</p>
-                    <a href="{% url 'register' %}" class="btn btn-green fw-medium py-3 px-5">Get Started Today</a>
-                </div>
-            </div>
+    <section class="py-5" style="background-color: #e6f7f3;"> <div class="container text-center py-4">
+            <h2 class="fw-bold text-dark mb-3">Ready to Find Quality Livestock?</h2>
+            
+            {% if request.user.is_authenticated %}
+                <p class="lead text-muted mb-4">You are all set! Browse our verified listings and start trading today.</p>
+                <a href="{% url 'livestock:marketplace' %}" class="btn btn-green btn-lg px-5 py-3 fw-bold shadow-sm">
+                    <i class="fas fa-search me-2"></i> Browse Marketplace
+                </a>
+            {% else %}
+                <p class="lead text-muted mb-4">Join thousands of buyers in our livestock marketplace.</p>
+                <a href="{% url 'register' %}" class="btn btn-green btn-lg px-5 py-3 fw-bold shadow-sm">
+                    Get Started Today
+                </a>
+            {% endif %}
+            
         </div>
     </section>
 {% endblock content %}

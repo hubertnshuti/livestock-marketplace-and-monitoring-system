@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Secure Payment Gateway{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-warning text-dark p-4 text-center">
+                    <h4 class="fw-bold m-0"><i class="fas fa-mobile-alt me-2"></i> Mobile Money Pay</h4>
+                    <small>Secure Payment Gateway</small>
+                </div>
+                
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <p class="text-muted mb-1">Total Amount</p>
+                        <h2 class="fw-bold text-dark">RWF {{ order.total_amount }}</h2>
+                        <span class="badge bg-light text-dark border">{{ item.species.species_name }} - {{ item.breed.breed_name }}</span>
+                    </div>
+
+                    <form id="fake-payment-form">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-muted">PHONE NUMBER (MTN/AIRTEL)</label>
+                            <input type="text" class="form-control form-control-lg" placeholder="078 000 0000" required>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-dark btn-lg fw-bold" id="pay-btn">
+                                Pay Now
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <small class="text-muted"><i class="fas fa-lock me-1"></i> 128-bit Secure Encryption</small>
+                    </div>
+                </div>
+                
+                <div id="loading-overlay" class="position-absolute top-0 start-0 w-100 h-100 bg-white d-flex flex-column align-items-center justify-content-center d-none" style="opacity: 0.95;">
+                    <div class="spinner-border text-warning" style="width: 3rem; height: 3rem;" role="status"></div>
+                    <h5 class="mt-3 fw-bold text-dark">Processing Payment...</h5>
+                    <p class="text-muted small">Please check your phone for the prompt.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('fake-payment-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Stop normal submission
+        
+        // Show loading simulation
+        document.getElementById('loading-overlay').classList.remove('d-none');
+        
+        // Wait 3 seconds to simulate network request, then redirect to success
+        setTimeout(function() {
+            window.location.href = "{% url 'livestock:payment_callback' %}?status=success&tx_ref={{ tx_ref }}";
+        }, 3000);
+    });
+</script>
+{% endblock content %}
