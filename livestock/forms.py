@@ -1,39 +1,45 @@
 # livestock/forms.py
-
 from django import forms
-from .models import LivestockItem, LivestockSpecies, Breed
-from .models import LivestockImage
+# FIX: Ensure all livestock models are imported from the local models file
+from .models import LivestockItem, LivestockImage, LivestockSpecies, Breed, OrderItem, Order 
 
+
+# --- 1. CORE LISTING FORM (Step 1: Basic Info) ---
 class LivestockItemForm(forms.ModelForm):
-    # Field to select the Species first
-    species = forms.ModelChoiceField(
-        queryset=LivestockSpecies.objects.all(),
-        label="Select Species (e.g., Cattle, Goat)",
-        empty_label="--- Select Species ---"
-    )
-
-    # Breed field will be populated via AJAX (we will handle this complexity later), 
-    # but for now, we include all breeds and mark it optional.
-    breed = forms.ModelChoiceField(
-        queryset=Breed.objects.all(),
-        label="Breed (Optional)",
-        required=False,
-        empty_label="--- Select Breed ---"
-    )
-
+    species = forms.ModelChoiceField(queryset=LivestockSpecies.objects.all(), required=True)
+    breed = forms.ModelChoiceField(queryset=Breed.objects.all(), required=False)
+    
     class Meta:
         model = LivestockItem
         fields = [
-            'species', 'breed', 'tag_id', 'quantity', 'gender', 
-            'age', 'weight', 'price', 'description', 'is_for_sale'
+            'species', 
+            'breed', 
+            'tag_id', 
+            'age', 
+            'weight', 
+            'gender', 
+            'price', 
+            'description',
+            'is_for_sale'
         ]
         widgets = {
-            'tag_id': forms.TextInput(attrs={'placeholder': 'Optional IoT Tag ID'}),
-            'price': forms.NumberInput(attrs={'placeholder': 'Price (RWF)'}),
-            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Detailed description and health notes...'}),
+            'tag_id': forms.TextInput(attrs={'placeholder': 'e.g., KGL001'}),
+            'age': forms.NumberInput(attrs={'placeholder': 'Age in months'}),
+            'weight': forms.NumberInput(attrs={'placeholder': 'Weight in kg'}),
+            'price': forms.NumberInput(attrs={'placeholder': 'RWF 150,000'}),
+            'description': forms.Textarea(attrs={'rows': 4}),
         }
-
+        
+# --- 2. IMAGE UPLOAD FORM (Step 2: Add Photos) ---
 class LivestockImageForm(forms.ModelForm):
     class Meta:
         model = LivestockImage
         fields = ['image']
+
+# --- 3. SIMPLE ORDER FORM (Used on Detail Page) ---
+class SimpleOrderForm(forms.Form):
+    quantity = forms.IntegerField(
+        min_value=1,
+        initial=1,
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Quantity'})
+    )

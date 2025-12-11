@@ -1,33 +1,42 @@
+# accounts/models.py
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-
+# ------------------------------------
+# CORE PROFILE EXTENSION
+# ------------------------------------
 class UserProfile(models.Model):
     """
-    Extra fields for the built-in User (matches ERD User attributes).
-    Keeps User table intact and stores additional attributes here.
+    Extends the built-in User model with core fields like role, phone, and picture.
     """
-    USER_TYPE_CHOICES = [
+    USER_TYPE_CHOICES = (
         ('farmer', 'Farmer'),
         ('buyer', 'Buyer'),
-        ('admin', 'Admin'),
-    ]
+    )
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    phone_number = models.CharField(max_length=30, blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userprofile')
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES)
-    registration_date = models.DateTimeField(default=timezone.now)
+    
+    # Contact and Location
+    phone_number = models.CharField(max_length=30, blank=True, null=True)
     location = models.CharField(max_length=255, blank=True, null=True)
+    
+    # Optional Fields
+    registration_date = models.DateTimeField(default=timezone.now)
+    profile_picture = models.ImageField(upload_to='profile_pics/', default='default_profile.png', blank=True)
 
     def __str__(self):
         return f"{self.user.username} ({self.user_type})"
 
 
+# ------------------------------------
+# ROLE SPECIFIC PROFILES
+# ------------------------------------
+
 class Farmer(models.Model):
     """
-    Weak entity derived from User. PK is user's id.
-    Farmer.UserID (PK & FK -> auth.User)
+    Stores farmer-specific data (Farm name, location, etc.).
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='farmer_profile')
     farm_name = models.CharField(max_length=255)
@@ -40,7 +49,7 @@ class Farmer(models.Model):
 
 class Buyer(models.Model):
     """
-    Weak entity derived from User. PK is user's id.
+    Stores buyer-specific data (Type, shipping address, etc.).
     """
     BUYER_TYPE_CHOICES = [
         ('individual', 'Individual'),
