@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - Livestock Monitor{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-success mb-2">Get in Touch</h1>
+        <p class="lead text-muted">We'd love to hear from you. Send us a message or visit our office.</p>
+    </div>
+
+    <div class="row g-5">
+        
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4 p-md-5">
+                    <h3 class="h4 text-success border-bottom pb-3 mb-4 fw-bold">
+                        Send us a message
+                    </h3>
+                    
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-medium">Full Name</label>
+                            <input type="text" class="form-control form-control-lg" id="name" placeholder="Enter your name">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label fw-medium">Email Address</label>
+                            <input type="email" class="form-control form-control-lg" id="email" placeholder="name@example.com">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="message" class="form-label fw-medium">Message</label>
+                            <textarea class="form-control form-control-lg" id="message" rows="5" placeholder="How can we help you?"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success btn-lg w-100 fw-bold rounded-pill shadow-sm">
+                            Send Message <i class="fas fa-paper-plane ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4 p-md-5">
+                    <h3 class="h4 text-success border-bottom pb-3 mb-4 fw-bold">
+                        Contact Information
+                    </h3>
+
+                    <div class="d-flex mb-4 align-items-start">
+                        <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle me-3">
+                            <i class="fas fa-phone-alt fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Phone</h5>
+                            <p class="mb-0 text-muted">+250 785 812 636</p>
+                            <small class="text-success fw-medium">Mon-Fri, 8am - 5pm</small>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mb-4 align-items-start">
+                        <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle me-3">
+                            <i class="fas fa-envelope fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Email</h5>
+                            <p class="mb-0 text-muted">support@herdmonitor.com</p>
+                            <small class="text-success fw-medium">24/7 Online Support</small>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mb-4 align-items-start">
+                        <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle me-3">
+                            <i class="fas fa-map-marker-alt fs-5"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1">Office</h5>
+                            <p class="mb-0 text-muted">Innovation Hub, 4th Floor</p>
+                            <p class="mb-0 text-muted">Kigali, Rwanda</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 rounded overflow-hidden shadow-sm border">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15950.049630962312!2d30.055!3d-1.95!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca4258ed8e797%3A0xf329992af7170a74!2sKigali%2C%20Rwanda!5e0!3m2!1sen!2srw!4v1620000000000!5m2!1sen!2srw" 
+                            width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy">
+                        </iframe>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 p-5 text-center bg-success text-white rounded-4 shadow position-relative overflow-hidden">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient opacity-50" style="background: linear-gradient(45deg, #064e3b, #10b981);"></div>
+        <div class="position-relative z-1">
+            <h3 class="fw-bold mb-3 display-6">Ready to Transform Your Farming?</h3>
+            <p class="mb-4 fs-5 opacity-75">Join our community today and experience smarter livestock management.</p>
+            {% if not request.user.is_authenticated %}
+                <a href="{% url 'register' %}" class="btn btn-warning btn-lg rounded-pill px-5 fw-bold shadow-sm text-dark">Get Started Today</a>
+            {% else %}
+                <a href="{% url 'dashboard' %}" class="btn btn-warning btn-lg rounded-pill px-5 fw-bold shadow-sm text-dark">Go to Dashboard</a>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock content %}
