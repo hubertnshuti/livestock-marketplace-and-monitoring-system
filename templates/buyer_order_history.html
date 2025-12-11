@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order History - Livestock Monitor{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">My Purchase History</h2>
+            <p class="text-muted mb-0">Track the status of your inquiries and orders.</p>
+        </div>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            {% if orders %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3">Order ID</th>
+                            <th>Date</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td class="ps-4 fw-bold text-dark">#{{ order.order_id }}</td>
+                            <td>{{ order.order_date|date:"M d, Y" }}</td>
+                            <td class="fw-bold text-success">RWF {{ order.total_amount }}</td>
+                            <td>
+                                {% if order.order_status == 'pending_inquiry' %}
+                                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">Pending Inquiry</span>
+                                {% elif order.order_status == 'confirmed' %}
+                                    <span class="badge bg-primary px-3 py-2 rounded-pill">Confirmed</span>
+                                {% else %}
+                                    <span class="badge bg-secondary px-3 py-2 rounded-pill">{{ order.order_status|title }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end pe-4">
+    <a href="{% url 'livestock:order_detail' pk=order.pk %}" class="btn btn-sm btn-outline-secondary">
+        <i class="fas fa-file-invoice me-1"></i> View Invoice
+    </a>
+</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-history text-muted fs-1 mb-3 opacity-25"></i>
+                <h5 class="text-muted">You haven't placed any inquiries yet.</h5>
+                <p class="text-muted small mb-4">Visit the marketplace to start shopping.</p>
+                <a href="{% url 'livestock:marketplace' %}" class="btn btn-success px-4">
+                    Browse Marketplace
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

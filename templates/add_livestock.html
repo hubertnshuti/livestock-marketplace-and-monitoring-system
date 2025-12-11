@@ -1,152 +1,90 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %}
-{% load app_filters %}  {% block content %}
-<main>
-    <div class="container my-5">
-        <div class="mx-auto" style="max-width: 56rem;">
+
+{% block title %}List New Livestock - Livestock Monitor{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
             <div class="card border-0 shadow-sm">
-                
-                <div class="card-header bg-light border-bottom">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center gap-4">
-                            <div class="d-flex align-items-center">
-                                <div class="step-circle active">1</div>
-                                <span class="step-label active">Basic Info & Pricing</span>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <div class="step-circle inactive" style="background-color: #d1d5db; color: #6b7280;">2</div>
-                                <span class="step-label inactive" style="color: #9ca3af;">Photos & Location</span>
-                            </div>
-                        </div>
-                        <div class="text-muted small">Step 1 of 2</div>
-                    </div>
+                <div class="card-header bg-success text-white py-3">
+                    <h4 class="mb-0 fw-bold"><i class="fas fa-plus-circle me-2"></i> List New Livestock</h4>
                 </div>
-
                 <div class="card-body p-4">
-                    <h2 class="fs-4 fw-bold text-dark mb-2">Add Livestock Listing</h2>
-                    <p class="text-muted mb-5">Fill in the identification, physical, and pricing details.</p>
-                    
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-success" role="alert">{{ message }}</div>
-                        {% endfor %}
-                    {% endif %}
-                    
-                    <form method="POST" enctype="multipart/form-data">
+                    <div class="progress mb-4" style="height: 5px;">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <p class="text-muted small mb-4">Step 1 of 2: Basic Information</p>
+
+                    <form method="POST">
                         {% csrf_token %}
-
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-                        {% endif %}
-
-                        <div class="form-section mb-5">
-                            <h3 class="fs-5 fw-semibold text-dark mb-4">Identification & Species</h3>
-                            
-                            <div class="row g-4 mb-4">
-                                <div class="col-12 col-md-6">
-                                    <label for="{{ form.species.id_for_label }}" class="form-label text-dark fw-medium">{{ form.species.label }}</label>
-                                    {{ form.species | add_class:"form-select" }}
-                                    {% if form.species.errors %}<small class="text-danger">{{ form.species.errors }}</small>{% endif %}
-                                </div>
-                                
-                                <div class="col-12 col-md-6">
-                                    <label for="{{ form.breed.id_for_label }}" class="form-label text-dark fw-medium">{{ form.breed.label }}</label>
-                                    {{ form.breed | add_class:"form-select" }}
-                                    <small class="text-muted d-block mt-1">Leave blank if unknown/generic (e.g., common poultry).</small>
-                                </div>
+                        
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.species.id_for_label }}" class="form-label fw-bold">Species</label>
+                                {{ form.species }}
+                                {% if form.species.errors %}
+                                    <div class="text-danger small">{{ form.species.errors }}</div>
+                                {% endif %}
                             </div>
-                            
-                            <div class="row g-4 mb-4">
-                                <div class="col-12 col-md-6">
-                                    <label for="{{ form.tag_id.id_for_label }}" class="form-label text-dark fw-medium">{{ form.tag_id.label }}</label>
-                                    {{ form.tag_id | add_class:"form-control" }}
-                                    <small class="text-muted d-block mt-1">If monitored, enter the unique IoT Tag ID.</small>
-                                </div>
-                                
-                                <div class="col-12 col-md-6">
-                                    <label for="{{ form.quantity.id_for_label }}" class="form-label text-dark fw-medium">{{ form.quantity.label }}</label>
-                                    {{ form.quantity | add_class:"form-control" }}
-                                    <small class="text-muted d-block mt-1">Enter 1 for single animals, or the number for bulk groups.</small>
-                                </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.breed.id_for_label }}" class="form-label fw-bold">Breed (Optional)</label>
+                                {{ form.breed }}
                             </div>
                         </div>
 
-                        <div class="form-section mb-5">
-                            <h3 class="fs-5 fw-semibold text-dark mb-4">Physical Details & Pricing</h3>
-                            
-                            <div class="row g-4 mb-4">
-                                <div class="col-12 col-md-4">
-                                    <label for="{{ form.gender.id_for_label }}" class="form-label text-dark fw-medium">{{ form.gender.label }}</label>
-                                    {{ form.gender | add_class:"form-select" }}
-                                </div>
-                                
-                                <div class="col-12 col-md-4">
-                                    <label for="{{ form.age.id_for_label }}" class="form-label text-dark fw-medium">{{ form.age.label }} (Months/Years)</label>
-                                    {{ form.age | add_class:"form-control" }}
-                                </div>
-                                
-                                <div class="col-12 col-md-4">
-                                    <label for="{{ form.weight.id_for_label }}" class="form-label text-dark fw-medium">{{ form.weight.label }} (kg)</label>
-                                    {{ form.weight | add_class:"form-control" }}
-                                </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.tag_id.id_for_label }}" class="form-label fw-bold">Tag ID / Name</label>
+                                {{ form.tag_id }}
                             </div>
-
-                            <div class="row g-4 mb-4">
-                                <div class="col-12 col-md-6">
-                                    <label for="{{ form.price.id_for_label }}" class="form-label text-dark fw-medium">{{ form.price.label }} (RWF)</label>
-                                    {{ form.price | add_class:"form-control" }}
-                                    <small class="text-muted d-block mt-1">The price buyers will see.</small>
-                                </div>
-                                
-                                <div class="col-12 col-md-6 d-flex align-items-end">
-                                    <div class="form-check pt-3">
-                                        {{ form.is_for_sale }}
-                                        <label class="form-check-label fw-medium" for="{{ form.is_for_sale.id_for_label }}">
-                                            {{ form.is_for_sale.label }}
-                                        </label>
-                                    </div>
-                                </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.gender.id_for_label }}" class="form-label fw-bold">Gender</label>
+                                {{ form.gender }}
                             </div>
                         </div>
 
-                        <div class="form-section mb-5">
-                            <h3 class="fs-5 fw-semibold text-dark mb-4">Description</h3>
-                            
-                            <div class="mb-4">
-                                <label for="{{ form.description.id_for_label }}" class="form-label text-dark fw-medium">{{ form.description.label }}</label>
-                                {{ form.description | add_class:"form-control" }}
-                                <small class="text-muted d-block mt-1">Include details like color, health status, feeding history, or special features.</small>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.age.id_for_label }}" class="form-label fw-bold">Age</label>
+                                {{ form.age }}
+                                <div class="form-text">e.g., "2 years" or "6 months"</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.weight.id_for_label }}" class="form-label fw-bold">Weight (kg)</label>
+                                {{ form.weight }}
                             </div>
                         </div>
 
-                        <div class="d-flex flex-column flex-sm-row justify-content-end gap-3 pt-4 border-top">
-                            <button type="button" class="btn btn-outline-secondary fw-medium d-none d-sm-block">
-                                Cancel
+                        <div class="mb-3">
+                            <label for="{{ form.price.id_for_label }}" class="form-label fw-bold">Price (RWF)</label>
+                            {{ form.price }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">Description</label>
+                            {{ form.description }}
+                            <div class="form-text">Describe health history, feeding, or special traits.</div>
+                        </div>
+
+                        <div class="mb-4 form-check">
+                            {{ form.is_for_sale }}
+                            <label class="form-check-label" for="{{ form.is_for_sale.id_for_label }}">
+                                Immediately list for sale on marketplace?
+                            </label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                Next: Upload Photos <i class="fas fa-arrow-right ms-2"></i>
                             </button>
-                            
-                            <button type="submit" class="btn btn-success fw-medium">
-                                Save & Proceed to Photos <i class="fas fa-arrow-right ms-2"></i>
-                            </button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</main>
-
-<style>
-    .step-circle {
-        width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.875rem;
-    }
-    .step-circle.active { background-color: #10b981; color: white; }
-    .step-label { margin-left: 8px; font-size: 0.875rem; font-weight: 500; }
-    .step-label.active { color: #1f2937; }
-    /* We assume the base.html styles cover the rest of the green/form styling */
-</style>
+</div>
 {% endblock content %}
-
-
-
-
-
