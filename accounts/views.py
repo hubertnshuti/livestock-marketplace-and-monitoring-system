@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 from .models import UserProfile, Farmer, Buyer
 from django.contrib.auth.decorators import login_required
+from livestock.models import LivestockItem, OrderItem
 
 
 # ------------------------
@@ -91,24 +92,32 @@ def login_view(request):
 # ------------------------
 @login_required
 def dashboard(request):
-    profile = request.user.profile
+    user = request.user
 
-    if profile.user_type == "farmer":
-        # Get the farmer profile
-        farmer = request.user.farmer_profile
-        # Get counts
-        total_livestock = farmer.livestock_items.count()
-        # Get actual items
-        recent_listings = farmer.livestock_items.all().order_by('-listing_date')[:5]
-
+    # 1. FARMER DASHBOARD LOGIC
+    if hasattr(user, 'farmer_profile'):
+        # Get all animals belonging to this farmer
+        my_livestock = LivestockItem.objects.filter(farmer=user.farmer_profile)
+        
+        # Count total livestock
+        total_livestock = my_livestock.count()
+        
+        # Find orders related to these animals (where status is pending)
+        pending_orders = OrderItem.objects.filter(
+            livestock__in=my_livestock, 
+            order__order_status='pending_inquiry'
+        ).count()
+        
         context = {
-            "profile": profile,
-            "total_livestock": total_livestock,
-            "recent_listings": recent_listings
+            'total_livestock': total_livestock,
+            'pending_orders': pending_orders, # Pass this count to the template
         }
-        return render(request, "farmer_dashboard.html", context)
+        return render(request, 'farmer_dashboard.html', context)
 
-    elif profile.user_type == "buyer":
-        return render(request, "buyer_dashboard.html", {"profile": profile})
+    # 2. BUYER DASHBOARD LOGIC
+    elif hasattr(user, 'buyer_profile'):
+        return render(request, 'buyer_dashboard.html')
 
-    return render(request, "dashboard.html", {"profile": profile})
+    # 3. FALLBACK (Admin or Error)
+    else:
+        return render(request, 'home.html')
