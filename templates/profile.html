@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load app_filters %}
+
+{% block title %}My Profile Settings{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-12">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Left: summary card -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center p-4">
+                <div class="mb-3 mx-auto position-relative" style="width: 150px; height: 150px;">
+                    {% if profile.profile_picture and profile.profile_picture.url and profile.profile_picture.url != '/media/default_profile.png' %}
+                        <img src="{{ profile.profile_picture.url }}"
+                             class="rounded-circle w-100 h-100 object-fit-cover border border-4 border-success p-1"
+                             alt="Profile Picture">
+                    {% else %}
+                        <div class="bg-light rounded-circle w-100 h-100 d-flex align-items-center justify-content-center text-muted border border-4 border-light">
+                            <i class="fas fa-user fa-4x text-muted opacity-50"></i>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <h4 class="fw-bold mb-1">{{ user.username|title }}</h4>
+                <p class="text-muted mb-3">{{ user.email }}</p>
+                <span class="badge {% if profile.user_type == 'farmer' %}bg-success{% else %}bg-primary{% endif %} rounded-pill px-3 py-2 fs-6">
+                    {{ profile.user_type|title }} Account
+                </span>
+
+                <hr class="mt-4 mb-3">
+
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary w-100 mt-2">
+                    <i class="fas fa-tachometer-alt me-2"></i> Go to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Right: editable forms -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white py-3">
+                    <h5 class="fw-bold m-0">Update Profile Information</h5>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- General contact + photo (UserProfileUpdateForm = profile_form) -->
+                        <div class="mb-5">
+                            <h6 class="text-uppercase small fw-bold mb-3 text-success border-bottom pb-2">
+                                Contact & Photo
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">Phone Number</label>
+                                    {{ profile_form.phone_number|add_class:"form-control" }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium">City/District</label>
+                                    {{ profile_form.location|add_class:"form-control" }}
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-medium">Profile Picture</label>
+                                    {{ profile_form.profile_picture|add_class:"form-control" }}
+                                    <small class="form-text text-muted">
+                                        Max file size 2MB. Leave blank to keep current photo.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Farmer-specific section -->
+                        {% if farmer_form %}
+                            <div class="mb-5 p-4 bg-light rounded-3 border">
+                                <h6 class="text-uppercase small fw-bold mb-3 text-warning border-bottom border-warning pb-2">
+                                    Farmer Specifics
+                                </h6>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-medium">Farm Name</label>
+                                        {{ farmer_form.farm_name|add_class:"form-control" }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-medium">Farm Location</label>
+                                        {{ farmer_form.farm_location|add_class:"form-control" }}
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-medium">Contact Person</label>
+                                        {{ farmer_form.contact_person|add_class:"form-control" }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <!-- Buyer-specific section -->
+                        {% if buyer_form %}
+                            <div class="mb-5 p-4 bg-light rounded-3 border">
+                                <h6 class="text-uppercase small fw-bold mb-3 text-primary border-bottom border-primary pb-2">
+                                    Buyer Specifics
+                                </h6>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-medium">Buyer Type</label>
+                                        {{ buyer_form.buyer_type|add_class:"form-select" }}
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-medium">Default Shipping Address</label>
+                                        {{ buyer_form.shipping_address|add_class:"form-control" }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-success btn-lg px-5 fw-bold shadow-sm">
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,379 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ItungoHub - Home{% endblock title %}
+
+{% block body_class %}home-page{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* --- 1. HERO SECTION STYLES --- */
+    .hero-wrapper {
+        position: relative;
+        height: 100vh; 
+        background-color: #011f13; 
+        overflow: hidden;
+    }
+
+    .hero-bg {
+        position: absolute; inset: 0;
+        background-image: url('https://images.unsplash.com/photo-1545468800-85cc9bc6ecf7?q=80&w=2070&auto=format&fit=crop');
+        background-size: cover; background-position: center;
+        transition: transform 10s ease;
+    }
+    
+    /* Premium Gradient Overlay */
+    .hero-wrapper::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(1, 31, 19, 0.85) 0%, rgba(1, 31, 19, 0.4) 50%, rgba(1, 31, 19, 0.9) 100%);
+        z-index: 1;
+    }
+
+    .hero-wrapper:hover .hero-bg { transform: scale(1.05); }
+
+    /* TEXT LAYOUT (Left Aligned) */
+    .hero-content {
+        position: relative; z-index: 10;
+        height: 100%; display: flex; flex-direction: column; justify-content: center;
+        padding-left: 5%; padding-right: 5%;
+        color: white;
+        max-width: 900px;
+    }
+
+    /* Animation Keyframes */
+    @keyframes slideInUp {
+        0% { opacity: 0; transform: translateY(40px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-title { 
+        font-family: 'Playfair Display', serif; 
+        font-size: 3.5rem; 
+        line-height: 1.1; 
+        margin-bottom: 25px; 
+        text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        opacity: 0;
+        animation: slideInUp 0.8s ease-out forwards;
+    }
+    
+    .hero-desc { 
+        font-size: 1.25rem; 
+        font-weight: 300; 
+        line-height: 1.6; 
+        opacity: 0;
+        max-width: 650px;
+        animation: slideInUp 0.8s ease-out 0.3s forwards;
+    }
+
+    .hero-divider { 
+        width: 80px; height: 3px; 
+        background-color: #10b981; 
+        margin-bottom: 25px;
+        opacity: 0;
+        animation: slideInUp 0.8s ease-out 0.2s forwards;
+    }
+
+    /* --- 2. HERO BUTTONS (Bottom Center) --- */
+    .hero-buttons-container {
+        position: absolute;
+        bottom: 60px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        z-index: 20;
+        padding: 0 20px;
+        opacity: 0;
+        animation: slideInUp 0.8s ease-out 0.6s forwards;
+    }
+
+    .hero-btn {
+        padding: 14px 45px;
+        font-weight: 600;
+        font-size: 1rem;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        white-space: nowrap;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    
+    .hero-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    .btn-green { background-color: #10b981; color: white; border: none; }
+    .btn-green:hover { background-color: #0e8a60; color: white; }
+
+    .btn-outline-light-custom { 
+        background-color: rgba(255,255,255,0.1); 
+        border: 2px solid rgba(255,255,255,0.8); 
+        color: white; 
+        backdrop-filter: blur(5px);
+    }
+    .btn-outline-light-custom:hover { background-color: white; color: #011f13; border-color: white; }
+
+    /* --- 3. SECTION STYLES --- */
+    .section-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #011f13; text-align: center; margin-bottom: 10px; font-weight: 700; }
+    
+    /* Feature Cards */
+    .feature-card {
+        position: relative;
+        height: 380px; 
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        background-color: #fff;
+    }
+
+    .feature-card .bg-img {
+        position: absolute; inset: 0; background-size: cover; background-position: center; 
+        transition: transform 0.8s ease;
+        z-index: 0;
+    }
+    
+    .feature-card .overlay {
+        position: absolute; inset: 0; 
+        background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.1) 100%);
+        transition: background 0.3s ease; 
+        z-index: 1;
+    }
+
+    .feature-card-content {
+        position: absolute; bottom: 0; left: 0; width: 100%;
+        padding: 30px;
+        z-index: 2;
+        color: white;
+    }
+
+    .feature-icon-wrapper {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 60px; height: 60px;
+        background-color: rgba(255,255,255,0.2); 
+        backdrop-filter: blur(5px);
+        border-radius: 50%;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .feature-card:hover .bg-img { transform: scale(1.1); }
+    .feature-card:hover .overlay { background: linear-gradient(to top, rgba(6, 78, 59, 0.9) 0%, rgba(6, 78, 59, 0.3) 100%); }
+
+    /* How It Works Steps */
+    .step-icon {
+        width: 70px; height: 70px;
+        background-color: #10b981; color: white;
+        border-radius: 50%;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; margin-bottom: 1.5rem;
+        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        transition: transform 0.3s ease;
+    }
+    .process-step:hover .step-icon { transform: translateY(-5px); background-color: #059669; }
+
+    /* Stay Connected Grid */
+    .stay-connected { padding: 80px 0; background-color: #f9fafb; }
+    .grid-container {
+        display: flex; gap: 20px; justify-content: center;
+        max-width: 1200px; margin: 0 auto; height: 350px;
+    }
+    .grid-card {
+        flex: 1; position: relative; overflow: hidden; cursor: pointer; min-width: 300px; border-radius: 12px;
+    }
+    .card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .grid-card:hover .card-img { transform: scale(1.1); }
+    .card-overlay {
+        position: absolute; inset: 0; background-color: rgba(1, 31, 19, 0.75); 
+        color: white; display: flex; flex-direction: column; justify-content: center; padding: 30px;
+        opacity: 0; transition: opacity 0.3s;
+    }
+    .grid-card:hover .card-overlay { opacity: 1; }
+    .static-card { background-color: #011f13; color: white; display: flex; flex-direction: column; justify-content: center; padding: 30px; }
+
+    @media (max-width: 768px) {
+        .hero-title { font-size: 2.5rem; }
+        .hero-buttons-container { flex-direction: column; align-items: center; bottom: 40px; }
+        .hero-btn { width: 100%; max-width: 300px; text-align: center; }
+        .grid-container { flex-direction: column; height: auto; }
+        .grid-card { height: 300px; }
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="hero-wrapper">
+    <div class="hero-bg"></div>
+    
+    <div class="hero-content">
+        <div class="hero-text-group">
+            <h1 class="hero-title">Ecosystem for Buying, Selling, <br>and Monitoring Livestock.</h1>
+            <div class="hero-divider"></div>
+            <p class="hero-desc">
+                We are building a unified ecosystem where livestock owners can easily buy and sell 
+                animals today and access advanced monitoring solutions for tomorrow.
+            </p>
+        </div>
+    </div>
+
+    <div class="hero-buttons-container">
+        <a href="{% url 'register' %}" class="hero-btn btn-green">
+            <i class="fas fa-user-plus me-2"></i>Start Selling
+        </a>
+        <a href="{% url 'livestock:marketplace' %}" class="hero-btn btn-outline-light-custom">
+            <i class="fas fa-search me-2"></i>Browse Livestock
+        </a>
+    </div>
+</div>
+
+<section class="py-5 bg-white">
+    <div class="container px-4 py-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title">Why Choose Our Marketplace?</h2>
+            <p class="text-muted" style="max-width: 600px; margin: 0 auto;">Experience a safer, faster, and more transparent way to trade livestock.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12 col-md-4">
+                <div class="feature-card">
+                    <div class="bg-img" style="background-image: url('https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=2070&auto=format&fit=crop');"></div>
+                    <div class="overlay"></div>
+                    <div class="feature-card-content">
+                        <div class="feature-icon-wrapper"><i class="fas fa-handshake text-white fs-4"></i></div>
+                        <h3 class="fs-4 fw-bold mb-2">Verified Trust</h3>
+                        <p class="mb-0 opacity-75 small">Every farmer is vetted. We ensure you trade with real people and authentic livestock.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="feature-card">
+                    <div class="bg-img" style="background-image: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop');"></div>
+                    <div class="overlay"></div>
+                    <div class="feature-card-content">
+                        <div class="feature-icon-wrapper"><i class="fas fa-truck text-white fs-4"></i></div>
+                        <h3 class="fs-4 fw-bold mb-2">Secure Delivery</h3>
+                        <p class="mb-0 opacity-75 small">We coordinate safe, reliable transportation to get your livestock where it needs to go.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="feature-card">
+                    <div class="bg-img" style="background-image: url('https://images.unsplash.com/photo-1545468800-85cc9bc6ecf7?q=80&w=2070&auto=format&fit=crop');"></div>
+                    <div class="overlay"></div>
+                    <div class="feature-card-content">
+                        <div class="feature-icon-wrapper"><i class="fas fa-tag text-white fs-4"></i></div>
+                        <h3 class="fs-4 fw-bold mb-2">Fair Pricing</h3>
+                        <p class="mb-0 opacity-75 small">Transparent market rates with no hidden middleman fees. Value for everyone.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5" style="background-color: #fcfcfc;">
+    <div class="container px-4 py-4">
+        <div class="text-center mb-5">
+            <h2 class="section-title">How It Works</h2>
+            <div class="section-line"></div>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-12 col-sm-6 col-md-3 text-center process-step">
+                <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                <h3 class="fs-5 fw-bold mb-2">1. Create Account</h3>
+                <p class="text-muted small">Sign up as a farmer or buyer in minutes with verification.</p>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 text-center process-step">
+                <div class="step-icon"><i class="fas fa-search"></i></div>
+                <h3 class="fs-5 fw-bold mb-2">2. List or Browse</h3>
+                <p class="text-muted small">Farmers list healthy livestock; Buyers browse verified options.</p>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 text-center process-step">
+                <div class="step-icon"><i class="fas fa-comments"></i></div>
+                <h3 class="fs-5 fw-bold mb-2">3. Connect</h3>
+                <p class="text-muted small">Communicate directly, negotiate prices, and agree on terms.</p>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-3 text-center process-step">
+                <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                <h3 class="fs-5 fw-bold mb-2">4. Transaction</h3>
+                <p class="text-muted small">Secure payment handling and delivery arrangement.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="stay-connected">
+    <div class="container">
+        <h2 class="section-title mb-5">Stay Connected</h2>
+        
+        <div class="grid-container">
+            <div class="grid-card">
+                <img src="https://images.pexels.com/photos/1108099/pexels-photo-1108099.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img" alt="Piglet">
+                <div class="card-overlay">
+                    <p class="mb-4 lead">"Veterinary verification has never been faster. Our new digital health records are live."</p>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fab fa-twitter"></i> <span>@ITUNGOHUB</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="static-card grid-card">
+                <p class="mb-4 lead">"When Little Dove sat down mid-walk, her owner knew something was off. A swift response from our vet team saved the day."</p>
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fab fa-twitter"></i> <span>@ITUNGOHUB</span>
+                </div>
+            </div>
+
+            <div class="grid-card">
+                <img src="https://images.pexels.com/photos/4207906/pexels-photo-4207906.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img" alt="Farmer with Cow">
+                <div class="card-overlay">
+                    <p class="mb-4 lead">"Empowering the next generation of agricultural entrepreneurs through technology."</p>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fab fa-twitter"></i> <span>@ITUNGOHUB</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center gap-4 mt-5 fs-4 text-dark opacity-50">
+            <a href="#" class="text-dark hover-green"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-dark hover-green"><i class="fab fa-facebook"></i></a>
+            <a href="#" class="text-dark hover-green"><i class="fab fa-youtube"></i></a>
+            <a href="#" class="text-dark hover-green"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 position-relative overflow-hidden" style="background: #064e3b; color: white;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; background-image: radial-gradient(circle, #ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+    
+    <div class="container px-4 position-relative z-1">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h2 class="fs-2 fw-bold mb-3" style="font-family: 'Playfair Display', serif;">Ready to Transform Your Farming?</h2>
+                <p class="mb-5 opacity-75 fs-5">Join thousands of farmers and buyers in our livestock marketplace.</p>
+                
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn btn-light hero-btn text-success">
+                        Go to Dashboard
+                    </a>
+                {% else %}
+                    <a href="{% url 'register' %}" class="btn btn-green hero-btn shadow-lg">
+                        Get Started Today
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

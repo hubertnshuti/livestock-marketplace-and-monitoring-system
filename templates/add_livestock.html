@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load app_filters %}
+
+{% block title %}Add New Livestock{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <h1 class="text-success fw-bold mb-4">List New Livestock</h1>
+            <p class="text-muted mb-5">
+                Fill out the form below to register your animal or group in the system and prepare it for the marketplace.
+            </p>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-section mb-5 p-4 border rounded shadow-sm">
+                    <h3 class="fs-5 fw-semibold text-dark mb-4">Identification & Core Information</h3>
+                    
+                    <div class="row g-4 mb-4">
+                        <div class="col-12 col-md-6">
+                            <label for="{{ form.species.id_for_label }}" class="form-label text-dark fw-medium">{{ form.species.label }}</label>
+                            {{ form.species | add_class:"form-select" }}
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="{{ form.breed.id_for_label }}" class="form-label text-dark fw-medium">{{ form.breed.label }}</label>
+                            {{ form.breed | add_class:"form-select" }}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.tag_id.id_for_label }}" class="form-label text-dark fw-medium">{{ form.tag_id.label }}</label>
+                            {{ form.tag_id | add_class:"form-control" }}
+                            <small class="text-muted d-block mt-1">If monitored, enter the unique IoT Tag ID. This field is optional.</small>
+                        </div>
+
+                        </div>
+                </div>
+
+                <div class="form-section mb-5 p-4 border rounded shadow-sm">
+                    <h3 class="fs-5 fw-semibold text-dark mb-4">Physical Details & Pricing</h3>
+                    
+                    <div class="row g-4 mb-4">
+                        <div class="col-12 col-md-4">
+                            <label for="{{ form.age.id_for_label }}" class="form-label text-dark fw-medium">{{ form.age.label }}</label>
+                            {{ form.age | add_class:"form-control" }}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label for="{{ form.weight.id_for_label }}" class="form-label text-dark fw-medium">{{ form.weight.label }}</label>
+                            {{ form.weight | add_class:"form-control" }}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label for="{{ form.gender.id_for_label }}" class="form-label text-dark fw-medium">{{ form.gender.label }}</label>
+                            {{ form.gender | add_class:"form-select" }}
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label for="{{ form.price.id_for_label }}" class="form-label text-dark fw-medium">{{ form.price.label }}</label>
+                            {{ form.price | add_class:"form-control" }}
+                        </div>
+                        <div class="col-12 col-md-6 d-flex align-items-end">
+                            <div class="form-check pb-2">
+                                {{ form.is_for_sale | add_class:"form-check-input" }}
+                                <label class="form-check-label fw-medium" for="{{ form.is_for_sale.id_for_label }}">
+                                    List for sale immediately?
+                                </label>
+                                <small class="text-muted d-block mt-1">Uncheck to save as inventory only.</small>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label for="{{ form.description.id_for_label }}" class="form-label text-dark fw-medium">{{ form.description.label }}</label>
+                            {{ form.description | add_class:"form-control" }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-success btn-lg px-5 fw-bold">
+                        Save Details & Add Photos <i class="fas fa-arrow-right ms-2"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

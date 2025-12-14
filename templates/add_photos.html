@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load app_filters %}
+
+{% block title %}Add Photos for {{ livestock.tag_id }}{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="text-success fw-bold mb-3">
+                <i class="fas fa-camera me-2"></i> Upload Photos
+            </h1>
+            <p class="text-muted mb-4">
+                Now uploading images for **{{ livestock.species.species_name }} (Tag ID: {{ livestock.tag_id }})**.
+                Upload at least one clear photo.
+            </p>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="{{ form.image.id_for_label }}" class="form-label">Select Image File</label>
+                            {{ form.image | add_class:"form-control" }} 
+                        </div>
+                        <button type="submit" class="btn btn-success fw-bold">Upload Photo</button>
+                        <a href="{% url 'livestock:upload_success' %}" class="btn btn-outline-secondary ms-3">
+                            Finish & View Listing
+                        </a>
+                    </form>
+                </div>
+            </div>
+
+            <h3 class="fs-5 fw-semibold text-dark mt-5 mb-3">Current Photos ({{ photos.count }})</h3>
+            <div class="row g-3">
+                {% for photo in photos %}
+                <div class="col-md-4">
+                    <div class="ratio ratio-1x1 border rounded overflow-hidden">
+                        <img src="{{ photo.image.url }}" class="object-fit-cover w-100 h-100" alt="Livestock Photo">
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p class="text-muted">No photos uploaded yet.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

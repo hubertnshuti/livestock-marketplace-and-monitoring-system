@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Livestock - {{ item.tag_id }}{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h4 class="fw-bold m-0 text-primary">Edit Livestock Details</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-muted border-bottom pb-2">Basic Information</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Species</label>
+                                    {{ form.species }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Breed</label>
+                                    {{ form.breed }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Tag ID (IoT)</label>
+                                    {{ form.tag_id }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Gender</label>
+                                    {{ form.gender }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-muted border-bottom pb-2">Physical Details & Price</h6>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Age (Months)</label>
+                                    {{ form.age }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Weight (kg)</label>
+                                    {{ form.weight }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Price (RWF)</label>
+                                    {{ form.price }}
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Description</label>
+                                    {{ form.description }}
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check form-switch">
+                                        {{ form.is_for_sale }}
+                                        <label class="form-check-label" for="{{ form.is_for_sale.id_for_label }}">List for Sale immediately?</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary fw-bold px-4">Update Details</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

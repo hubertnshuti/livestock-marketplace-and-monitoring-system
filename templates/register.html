@@ -1,0 +1,339 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Join ItungoHub{% endblock title %}
+
+
+{% block extra_css %}
+<style>
+    /* SPLIT SCREEN LAYOUT */
+    .split-container {
+        min-height: calc(100vh - 76px);
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+
+    /* LEFT SIDE: Image & Overlay Text */
+    .split-image {
+        flex: 1;
+        min-width: 400px;
+        position: relative;
+        background-image: url('https://images.pexels.com/photos/4207906/pexels-photo-4207906.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+        background-color: #011f13;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        justify-content: center;
+        padding: 40px;
+    }
+
+
+    .split-image::before {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7));
+    }
+
+
+    .image-text-content {
+        position: absolute;
+        top: 60px;
+        left: 50px;
+        right: 50px;
+        z-index: 2;
+        color: white;
+        text-align: left;
+    }
+
+
+    .welcome-headline {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .welcome-subhead {
+        font-size: 1.1rem;
+        font-weight: 400;
+        opacity: 0.9;
+        line-height: 1.5;
+        max-width: 450px;
+    }
+
+
+    .split-form {
+        flex: 1;
+        min-width: 350px;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 3rem 4rem;
+        max-width: 700px;
+        overflow-y: auto;
+    }
+
+
+    .form-header {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        color: #011f13;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin-bottom: 5px;
+        font-size: 0.95rem;
+    }
+    
+    .form-control:focus {
+        background-color: white;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+
+
+    .btn-green-block {
+        background-color: #10b981;
+        color: white;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s;
+        margin-top: 1rem;
+    }
+    
+    .btn-green-block:hover {
+        background-color: #0e8a60;
+        transform: translateY(-1px);
+    }
+
+
+    .user-type-group {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .radio-card {
+        flex: 1;
+        position: relative;
+    }
+    
+    .radio-card input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+    
+    .radio-card label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        height: 100%;
+        color: #6c757d;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    .radio-card label i {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+    }
+    
+    .radio-card input:checked + label {
+        border-color: #10b981;
+        background-color: #f0fdf4;
+        color: #011f13;
+    }
+
+
+    #farm-details-section {
+        display: none;
+        transition: all 0.3s ease;
+    }
+
+
+    @media (max-width: 991px) {
+        .split-image {
+            display: none;
+        }
+        .split-form {
+            padding: 2rem;
+            max-width: 100%;
+        }
+    }
+</style>
+{% endblock extra_css %}
+
+
+{% block content %}
+<div class="split-container">
+    
+    <div class="split-image">
+        <div class="image-text-content">
+            <h1 class="welcome-headline">Welcome to the future <br>of farming.</h1>
+            <p class="welcome-subhead">Join Rwanda's fastest-growing digital livestock marketplace. Secure, verified, and direct.</p>
+        </div>
+    </div>
+
+
+    <div class="split-form">
+        <div class="form-header">
+            <h2 class="form-title">Create Account</h2>
+            <p class="text-muted">Already have an account? <a href="{% url 'login' %}" class="fw-bold text-decoration-none" style="color: #10b981;">Log In</a></p>
+        </div>
+
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="alert alert-danger p-2 small mb-3">
+                    Please correct the errors below.
+                </div>
+            {% endif %}
+
+
+            <label class="form-label fw-bold small text-uppercase text-muted">I am a...</label>
+            <div class="user-type-group">
+                <div class="radio-card">
+                    <input type="radio" name="user_type" id="type_farmer" value="farmer" onclick="toggleFarmFields()">
+                    <label for="type_farmer"><i class="fas fa-tractor"></i> Farmer</label>
+                </div>
+                <div class="radio-card">
+                    <input type="radio" name="user_type" id="type_buyer" value="buyer" checked onclick="toggleFarmFields()">
+                    <label for="type_buyer"><i class="fas fa-shopping-basket"></i> Buyer</label>
+                </div>
+            </div>
+
+
+            <!-- FARM DETAILS SECTION (Only for Farmers) -->
+            <div id="farm-details-section" class="mb-3 p-3 bg-light rounded border">
+                <h6 class="fw-bold text-success mb-3 small"><i class="fas fa-leaf me-2"></i>Farm Details</h6>
+                
+                <div class="mb-2">
+                    <label class="form-label small fw-bold">Farm Name <span class="text-danger">*</span></label>
+                    {{ form.farm_name }}
+                    <div class="text-danger small">{{ form.farm_name.errors }}</div>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small fw-bold">Farm Location <span class="text-danger">*</span></label>
+                    {{ form.farm_location }}
+                    <div class="text-danger small">{{ form.farm_location.errors }}</div>
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label small fw-bold">Contact Person <span class="text-danger">*</span></label>
+                    {{ form.contact_person }}
+                    <div class="text-danger small">{{ form.contact_person.errors }}</div>
+                </div>
+            </div>
+
+
+            <!-- PHONE & LOCATION (for all users) -->
+            <div class="row mb-2">
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Phone Number <span class="text-danger">*</span></label>
+                    {{ form.phone_number }}
+                    <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Location <span class="text-danger">*</span></label>
+                    {{ form.location }}
+                    <div class="text-danger small">{{ form.location.errors }}</div>
+                </div>
+            </div>
+
+
+            <!-- USERNAME, EMAIL -->
+            <div class="mb-2">
+                <label class="form-label small fw-bold">Username</label>
+                {{ form.username }}
+                <div class="text-danger small">{{ form.username.errors }}</div>
+            </div>
+            
+            <div class="mb-2">
+                <label class="form-label small fw-bold">Email Address</label>
+                {{ form.email }}
+                <div class="text-danger small">{{ form.email.errors }}</div>
+            </div>
+            
+            <!-- PASSWORDS -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Password</label>
+                    {{ form.password }}
+                    <div class="text-danger small">{{ form.password.errors }}</div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Confirm Password</label>
+                    {{ form.confirm_password }}
+                    <div class="text-danger small">{{ form.confirm_password.errors }}</div>
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn-green-block">Create Account</button>
+            
+            <p class="text-center mt-3 small text-muted">
+                By signing up, you agree to our <a href="#" class="text-muted text-decoration-underline">Terms of Service</a>.
+            </p>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block scripts %}
+<script>
+    function toggleFarmFields() {
+        const farmerRadio = document.getElementById('type_farmer');
+        const farmSection = document.getElementById('farm-details-section');
+        const farmInput = document.getElementById('id_farm_name');
+        const locationInput = document.getElementById('id_farm_location');
+        const contactInput = document.getElementById('id_contact_person');
+
+        if (farmerRadio.checked) {
+            farmSection.style.display = 'block';
+            farmInput.required = true;
+            locationInput.required = true;
+            contactInput.required = true;
+        } else {
+            farmSection.style.display = 'none';
+            farmInput.required = false;
+            locationInput.required = false;
+            contactInput.required = false;
+            farmInput.value = '';
+            locationInput.value = '';
+            contactInput.value = '';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', toggleFarmFields);
+</script>
+{% endblock scripts %}

@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - Livestock Monitor{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    
+    <!-- Mission -->
+    <div class="text-center py-5">
+        <h1 class="display-4 fw-bold text-success mb-3">Our Mission</h1>
+        <h2 class="h3 text-secondary fw-semibold mb-4">Smarter Farming, Stronger Communities</h2>
+        
+        <div class="mx-auto p-4 bg-success bg-opacity-10 border-start border-success border-5 rounded" style="max-width: 800px;">
+            <p class="lead fst-italic text-muted mb-0">
+                <i class="fas fa-quote-left me-2 opacity-50"></i>
+                We connect farmers and buyers through technology, building trust and transparency in livestock farming.
+                <i class="fas fa-quote-right ms-2 opacity-50"></i>
+            </p>
+        </div>
+    </div>
+
+    <!-- Story + Vision -->
+    <div class="row g-5 mt-2 mb-5">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm mb-5 h-100">
+                <div class="card-body p-4">
+                    <h3 class="h4 text-success border-bottom pb-2 mb-3 fw-bold">
+                        <i class="fas fa-book-open me-2"></i> Our Story
+                    </h3>
+                    <p class="text-muted">
+                        We initiated this platform to solve real problems faced by farmers — livestock theft,
+                        disease, and unfair markets.
+                    </p>
+                    <p class="text-muted mb-0">
+                        Our journey began around ItungoHub at UR‑CST in Kigali, where we saw how hard it is
+                        for small‑scale farmers to get fair prices and reliable information. By combining
+                        local field knowledge with modern web tools, we are building a more transparent
+                        livestock marketplace for Rwanda and beyond.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4 d-flex flex-column">
+                    <h3 class="h4 text-success border-bottom pb-2 mb-3 fw-bold">
+                        <i class="fas fa-globe-africa me-2"></i> Our Vision
+                    </h3>
+                    
+                    <!-- You can later swap this URL with your own static image -->
+                    <div class="text-center my-3">
+                        <img src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&q=80&w=600"
+                             alt="Farmers in Eastern Province, Rwanda"
+                             class="img-fluid rounded-3 shadow-sm w-100 object-fit-cover"
+                             style="height: 200px;">
+                    </div>
+
+                    <p class="text-muted">
+                        We envision a future where every farmer in Rwanda — from Nyamirambo to Musanze and
+                        Nyagatare — has a simple digital place to showcase livestock, and every buyer can
+                        purchase with complete confidence about origin and health.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="py-5 bg-light rounded-4 mb-5 px-3">
+        <div class="text-center mb-5">
+            <h3 class="fw-bold text-dark">Trusted by the Community</h3>
+            <p class="text-muted">Hear from the farmers and buyers who use our platform.</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text text-muted fst-italic mb-4">
+                            "This platform transformed how I sell my cattle. I no longer worry about middlemen
+                            lowering my prices. It's direct and transparent."
+                        </p>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2 fw-bold" style="width: 40px; height: 40px;">J</div>
+                            <div class="text-start">
+                                <h6 class="fw-bold mb-0 text-dark">Jean‑Claude M.</h6>
+                                <small class="text-success" style="font-size: 0.8rem;">Dairy Farmer – Gicumbi</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="card-text text-muted fst-italic mb-4">
+                            "Finding healthy, verified goats for my butcher shop has never been easier.
+                            Photos, prices, and locations are clear, so I can plan my purchases faster."
+                        </p>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2 fw-bold" style="width: 40px; height: 40px;">A</div>
+                            <div class="text-start">
+                                <h6 class="fw-bold mb-0 text-dark">Alice K.</h6>
+                                <small class="text-primary" style="font-size: 0.8rem;">Butcher – Nyamirambo</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                        </div>
+                        <p class="card-text text-muted fst-italic mb-4">
+                            "What helps me most is keeping all my animals and sales in one place.
+                            I can quickly see which animals are listed, reserved, or sold."
+                        </p>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2 fw-bold" style="width: 40px; height: 40px;">P</div>
+                            <div class="text-start">
+                                <h6 class="fw-bold mb-0 text-dark">Peter R.</h6>
+                                <small class="text-success" style="font-size: 0.8rem;">Mixed Farmer – Bugesera</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Team -->
+    <div class="py-5">
+        <div class="text-center mb-5">
+            <h3 class="fw-bold text-dark">Meet the Team</h3>
+            <p class="text-muted">The dedicated minds behind the Livestock Monitor project.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <!-- Hubert -->
+            <div class="col-6 col-md-3">
+                <div class="card border-0 h-100 text-center hover-shadow transition-all">
+                    <div class="card-body">
+                        <div class="mb-3 mx-auto overflow-hidden rounded-circle shadow-sm border border-3 border-success"
+                             style="width: 120px; height: 120px;">
+                            <!-- Later: replace this URL with your own static image file -->
+                            <img src="https://ui-avatars.com/api/?name=Hubert+Nshuti&background=10b981&color=fff&size=128"
+                                 class="w-100 h-100 object-fit-cover" alt="Hubert Nshuti">
+                        </div>
+                        <h5 class="fw-bold mb-1 text-dark">Hubert Nshuti</h5>
+                        <p class="text-success fw-bold small mb-2">Project Lead & Architect</p>
+                        <p class="text-muted small mb-0">
+                            Designs the overall platform, backend logic, and database structure to keep
+                            farmers, buyers, and livestock data connected.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NSG Gilbert -->
+            <div class="col-6 col-md-3">
+                <div class="card border-0 h-100 text-center hover-shadow transition-all">
+                    <div class="card-body">
+                        <div class="mb-3 mx-auto overflow-hidden rounded-circle shadow-sm border border-3 border-light"
+                             style="width: 120px; height: 120px;">
+                            <img src="https://ui-avatars.com/api/?name=NSG+Gilbert&background=ff9800&color=fff&size=128"
+                                 class="w-100 h-100 object-fit-cover" alt="NSG Gilbert">
+                        </div>
+                        <h5 class="fw-bold mb-1 text-dark">NSG Gilbert</h5>
+                        <p class="text-warning fw-bold small mb-2">Farmer Operations & Workflows</p>
+                        <p class="text-muted small mb-0">
+                            Focuses on farmer dashboards, onboarding flows, and day‑to‑day operations to make
+                            listing animals simple for rural users.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Baptiste -->
+            <div class="col-6 col-md-3">
+                <div class="card border-0 h-100 text-center hover-shadow transition-all">
+                    <div class="card-body">
+                        <div class="mb-3 mx-auto overflow-hidden rounded-circle shadow-sm border border-3 border-light"
+                             style="width: 120px; height: 120px;">
+                            <img src="https://ui-avatars.com/api/?name=Baptiste&background=2563eb&color=fff&size=128"
+                                 class="w-100 h-100 object-fit-cover" alt="Baptiste">
+                        </div>
+                        <h5 class="fw-bold mb-1 text-dark">Baptiste</h5>
+                        <p class="text-primary fw-bold small mb-2">Marketplace & Buyer Experience</p>
+                        <p class="text-muted small mb-0">
+                            Works on the marketplace, filters, and order history so buyers can quickly find the
+                            right animal at the right price.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sandra Kevine -->
+            <div class="col-6 col-md-3">
+                <div class="card border-0 h-100 text-center hover-shadow transition-all">
+                    <div class="card-body">
+                        <div class="mb-3 mx-auto overflow-hidden rounded-circle shadow-sm border border-3 border-light"
+                             style="width: 120px; height: 120px;">
+                            <img src="https://ui-avatars.com/api/?name=Sandra+Kevine&background=6c757d&color=fff&size=128"
+                                 class="w-100 h-100 object-fit-cover" alt="Sandra Kevine">
+                        </div>
+                        <h5 class="fw-bold mb-1 text-dark">Sandra Kevine</h5>
+                        <p class="text-secondary fw-bold small mb-2">Frontend & User Experience</p>
+                        <p class="text-muted small mb-0">
+                            Leads the visual design, responsive layouts, and user‑friendly flows so the platform
+                            feels simple on both phone and laptop.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-5 p-5 text-center bg-success text-white rounded-4 shadow position-relative overflow-hidden">
+        <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient opacity-50"
+             style="background: linear-gradient(45deg, #064e3b, #10b981);"></div>
+        <div class="position-relative z-1">
+            <h3 class="fw-bold mb-3 display-6">Ready to Transform Your Farming?</h3>
+            <p class="mb-4 fs-5 opacity-75">Get started today and connect your livestock to trusted buyers.</p>
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'dashboard' %}"
+                   class="btn btn-warning btn-lg rounded-pill px-5 fw-bold shadow-sm text-dark">
+                    Go to Dashboard
+                </a>
+            {% else %}
+                <a href="{% url 'register' %}"
+                   class="btn btn-warning btn-lg rounded-pill px-5 fw-bold shadow-sm text-dark">
+                    Join Our Community
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .hover-shadow {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+</style>
+{% endblock content %}

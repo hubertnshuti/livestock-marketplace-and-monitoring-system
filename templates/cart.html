@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <h2 class="fw-bold text-dark mb-4">
+                <i class="fas fa-shopping-cart me-2"></i>Shopping Cart
+            </h2>
+
+            {% if order and order.order_items.all %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Livestock</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.order_items.all %}
+                        <tr class="align-middle">
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if item.livestock.images.first %}
+                                    <img src="{{ item.livestock.images.first.image.url }}" alt="Livestock"
+                                        style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-right: 15px;">
+                                    {% else %}
+                                    <div
+                                        style="width: 60px; height: 60px; background-color: #f0f0f0; border-radius: 8px; margin-right: 15px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fas fa-paw text-muted"></i>
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">
+                                            {% if item.livestock.breed %}
+                                            {{ item.livestock.breed.breed_name }}
+                                            {% else %}
+                                            {{ item.livestock.species.species_name }}
+                                            {% endif %}
+                                        </h6>
+                                        <small class="text-muted">ID: {{ item.livestock.tag_id|default:"N/A" }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <strong>RWF {{ item.livestock.price|floatformat:0|default:"0" }}</strong>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark">{{ item.quantity }}</span>
+                            </td>
+                            <td>
+                                <strong>RWF {{ item.unit_price_at_time|floatformat:0 }}</strong>
+                            </td>
+                            <td>
+                                <a href="{% url 'livestock:remove_from_cart' item_id=item.order_item_id %}"
+                                    class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Order Summary</h5>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total (price you pay):</span>
+                        <strong>RWF {{ order.total_amount|floatformat:0 }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping:</span>
+                        <strong>RWF 0</strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <h6 class="fw-bold">Final Total:</h6>
+                        <h6 class="fw-bold text-success">RWF {{ order.total_amount|floatformat:0 }}</h6>
+                    </div>
+                    <a href="{% url 'livestock:checkout_cart' %}" class="btn btn-success btn-lg w-100">
+                        <i class="fas fa-credit-card me-2"></i>Proceed to Checkout
+                    </a>
+                </div>
+            </div>
+
+
+
+            {% else %}
+            <!-- Empty Cart -->
+            <div class="text-center py-5">
+                <i class="fas fa-shopping-cart text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
+                <h4 class="text-muted mt-3">Your cart is empty</h4>
+                <p class="text-muted mb-4">Add livestock items to your cart to get started.</p>
+                <a href="{% url 'livestock:marketplace' %}" class="btn btn-success btn-lg">
+                    <i class="fas fa-shopping-basket me-2"></i>Continue Shopping
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar: Recommended Items -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="fas fa-star me-2"></i>Recommended for You</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">Based on your browsing history, you might like these items.</p>
+                    <!-- You can add recommended items here later -->
+                </div>
+            </div>
+
+            <!-- Continue Shopping Button -->
+            <div class="d-grid">
+                <a href="{% url 'livestock:marketplace' %}" class="btn btn-outline-success btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function removeItem(itemId) {
+        if (confirm('Remove this item from cart?')) {
+            // TODO: Implement remove functionality
+            alert('Item removal coming soon!');
+        }
+    }
+</script>
+{% endblock content %}

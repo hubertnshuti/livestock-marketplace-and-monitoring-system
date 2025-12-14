@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}For Farmers - ItungoHub{% endblock title %}
+
+{% block extra_css %}
+<style>
+    /* --- 1. HERO SECTION (Warm & Earthy) --- */
+    .farmers-hero {
+        position: relative;
+        height: 85vh; 
+        background-color: #1a1a1a;
+        overflow: hidden;
+    }
+
+    .hero-bg {
+        position: absolute; inset: 0;
+        /* Image: Farmer in field / Growth */
+        background-image: url('https://images.unsplash.com/photo-1595841696677-6489ff3f8cd1?q=80&w=2070&auto=format&fit=crop');
+        background-size: cover; background-position: center;
+        transition: transform 10s ease;
+    }
+    
+    /* Overlay: Dark Green/Earthy for readability */
+    .farmers-hero::before {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(to bottom, rgba(10, 30, 10, 0.85) 0%, rgba(10, 30, 10, 0.5) 50%, rgba(10, 30, 10, 0.9) 100%);
+        z-index: 1;
+    }
+
+    .farmers-hero:hover .hero-bg { transform: scale(1.05); }
+
+    .hero-content {
+        position: relative; z-index: 10;
+        height: 100%; display: flex; flex-direction: column; justify-content: center;
+        /* ALIGNMENT FIX: LEFT */
+        align-items: flex-start; 
+        text-align: left;
+        padding-left: 5%; padding-right: 5%;
+        color: white; max-width: 900px;
+    }
+
+    .hero-title {
+        font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 700;
+        margin-bottom: 20px; text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    .hero-lead {
+        font-size: 1.25rem; font-weight: 300; opacity: 0.95; line-height: 1.6; margin-bottom: 40px; max-width: 700px;
+    }
+
+    /* --- HERO BUTTONS --- */
+    .btn-group-hero {
+        display: flex; gap: 20px; 
+        justify-content: flex-start; /* ALIGNMENT FIX: LEFT */
+        flex-wrap: wrap;
+    }
+
+    .hero-btn {
+        padding: 15px 40px; border-radius: 50px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+        transition: all 0.3s ease; text-decoration: none; font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .btn-gold { background-color: #fbbf24; color: #064e3b; border: none; }
+    .btn-gold:hover { background-color: #f59e0b; color: #022c22; transform: translateY(-3px); }
+
+    .btn-outline-white { border: 2px solid rgba(255,255,255,0.8); color: white; background: transparent; backdrop-filter: blur(4px); }
+    .btn-outline-white:hover { background: white; color: #064e3b; transform: translateY(-3px); border-color: white; }
+
+    /* --- 2. CARDS & SECTIONS --- */
+    .process-section { padding: 100px 0; background-color: #f8f9fa; }
+    
+    .simple-card {
+        background: #fff; border: none; border-radius: 12px; padding: 40px 30px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%; border-bottom: 4px solid transparent;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .simple-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        border-bottom: 4px solid #10b981;
+    }
+
+    .icon-box {
+        width: 70px; height: 70px; background: #ecfdf5; color: #10b981;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 1.8rem; margin-bottom: 25px;
+    }
+
+    @media (max-width: 768px) {
+        .hero-title { font-size: 2.5rem; }
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+
+<div class="farmers-hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Maximize Your Farm's <br>Potential.</h1>
+        <p class="hero-lead">
+            Stop relying on middlemen. List your livestock, track health records digitally, and sell directly to verified buyers for better profit margins.
+        </p>
+        <div class="btn-group-hero">
+            <a href="{% url 'livestock:livestock_add' %}" class="hero-btn btn-gold">
+                <i class="fas fa-plus me-2"></i> List Your Livestock
+            </a>
+            
+            {% if not request.user.is_authenticated %}
+            <a href="{% url 'register' %}" class="hero-btn btn-outline-white">
+                Join Network
+            </a>
+            {% else %}
+            <a href="{% url 'dashboard' %}" class="hero-btn btn-outline-white">
+                Go to Dashboard
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<section class="process-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold display-5 mb-3" style="font-family: 'Playfair Display', serif; color: #011f13;">Simple Steps to Sell</h2>
+            <p class="text-muted lead">We've simplified the trading process so you can focus on farming.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="simple-card">
+                    <div class="icon-box"><i class="fas fa-camera"></i></div>
+                    <h3 class="fw-bold h4 mb-3">1. Create Listing</h3>
+                    <p class="text-muted">Take a photo, add breed details, and set your price. Our simple form helps you create a professional listing in minutes.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="simple-card">
+                    <div class="icon-box"><i class="fas fa-file-medical"></i></div>
+                    <h3 class="fw-bold h4 mb-3">2. Show Health</h3>
+                    <p class="text-muted">Upload vaccination records. Verified healthy animals sell 3x faster and attract premium buyers who pay better prices.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="simple-card">
+                    <div class="icon-box"><i class="fas fa-handshake"></i></div>
+                    <h3 class="fw-bold h4 mb-3">3. Get Paid</h3>
+                    <p class="text-muted">Receive offers directly. Negotiate terms, arrange delivery, and get paid securely via mobile money or bank transfer.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 position-relative overflow-hidden" style="background: #064e3b; color: white;">
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; background-image: radial-gradient(circle, #ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
+    
+    <div class="container px-4 position-relative z-1">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h2 class="fs-2 fw-bold mb-3" style="font-family: 'Playfair Display', serif;">Ready to Transform Your Farming?</h2>
+                <p class="mb-5 opacity-75 fs-5">Join thousands of farmers and buyers in our livestock marketplace.</p>
+                
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="hero-btn btn-gold shadow-lg" style="color: #064e3b;">
+                        Go to My Farm
+                    </a>
+                {% else %}
+                    <a href="{% url 'register' %}" class="hero-btn btn-gold shadow-lg" style="color: #064e3b;">
+                        Start Selling Today
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}

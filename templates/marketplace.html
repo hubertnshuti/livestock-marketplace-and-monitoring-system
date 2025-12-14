@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Marketplace - Browse Livestock{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark">Browse Livestock</h2>
+            <p class="text-muted">Verified animals available for purchase directly from farmers.</p>
+        </div>
+
+        {% if request.user.is_authenticated and request.user.userprofile.user_type == 'buyer' %}
+        <a href="{% url 'livestock:order_history' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-shopping-cart me-2"></i> My Orders
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- ADVANCED FILTERS SECTION -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom">
+            <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Advanced Filters</h5>
+        </div>
+        <div class="card-body">
+            <form method="GET" class="row g-3">
+                <!-- Species Filter -->
+                <div class="col-md-3">
+                    <label for="species" class="form-label fw-bold">Species</label>
+                    <select class="form-select" id="species" name="species">
+                        <option value="">All Species</option>
+                        {% for sp in species_list %}
+                            {% if selected_species|default:'' == sp.id|stringformat:"s" %}
+                                <option value="{{ sp.id }}" selected>{{ sp.species_name }}</option>
+                            {% else %}
+                                <option value="{{ sp.id }}">{{ sp.species_name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Location Filter -->
+                <div class="col-md-3">
+                    <label for="location" class="form-label fw-bold">Location</label>
+                    <select class="form-select" id="location" name="location">
+                        <option value="">All Locations</option>
+                        {% for loc in locations %}
+                            {% if selected_location == loc %}
+                                <option value="{{ loc }}" selected>{{ loc }}</option>
+                            {% else %}
+                                <option value="{{ loc }}">{{ loc }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Min Price Filter -->
+                <div class="col-md-2">
+                    <label for="min_price" class="form-label fw-bold">Min Price (RWF)</label>
+                    <input type="number" class="form-control" id="min_price" name="min_price"
+                           placeholder="0" value="{{ selected_min_price }}">
+                </div>
+
+                <!-- Max Price Filter -->
+                <div class="col-md-2">
+                    <label for="max_price" class="form-label fw-bold">Max Price (RWF)</label>
+                    <input type="number" class="form-control" id="max_price" name="max_price"
+                           placeholder="999999" value="{{ selected_max_price }}">
+                </div>
+
+                <!-- Filter Buttons -->
+                <div class="col-md-2 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="fas fa-search me-2"></i>Filter
+                    </button>
+                    <a href="{% url 'livestock:marketplace' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-redo me-2"></i>Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- RESULTS COUNT -->
+    <div class="mb-3">
+        <p class="text-muted">
+            Showing <strong>{{ listings|length }}</strong>
+            {% if listings|length == 1 %}animal{% else %}animals{% endif %}
+        </p>
+    </div>
+
+    <!-- LIVESTOCK LISTINGS GRID -->
+    <div class="row g-4">
+        {% for item in listings %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <a href="{% url 'livestock:livestock_detail' pk=item.pk %}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden item-card">
+                    <div class="ratio ratio-4x3 bg-light position-relative">
+                        {% if item.images.first %}
+                            <img src="{{ item.images.first.image.url }}" class="object-fit-cover"
+                                 alt="{{ item.species.species_name }}">
+                        {% else %}
+                            <div class="d-flex align-items-center justify-content-center text-muted h-100">
+                                <i class="fas fa-paw fa-3x opacity-25"></i>
+                            </div>
+                        {% endif %}
+
+                        <div class="position-absolute top-0 end-0 p-2">
+                            <span class="badge bg-white text-dark shadow-sm">
+                                {% if item.breed %}
+                                    {{ item.breed.breed_name }}
+                                {% else %}
+                                    {{ item.species.species_name }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="position-absolute bottom-0 start-0 p-2">
+                            <span class="badge bg-success shadow-sm">Verified</span>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title fw-bold m-0 text-success">
+                                {% if item.price %}RWF {{ item.price }}{% else %}Contact for Price{% endif %}
+                            </h5>
+                        </div>
+
+                        <p class="card-text text-muted small mb-3 line-clamp-2" style="min-height: 40px;">
+                            {{ item.description|default:"No description provided."|truncatechars:60 }}
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center small text-muted mb-3 pt-3 border-top">
+                            <span>
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                {{ item.farmer.farm_location|default:"Rwanda" }}
+                            </span>
+                            <span>
+                                <i class="fas fa-weight me-1"></i>
+                                {{ item.weight|default:"--" }}kg
+                            </span>
+                        </div>
+
+                        <div class="d-grid">
+                            <span class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-eye me-1"></i>View Details
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="mb-3">
+                <i class="fas fa-box-open text-muted fs-1 opacity-25"></i>
+            </div>
+            <h4 class="text-muted">No livestock found matching your filters.</h4>
+            <p class="text-muted">
+                Try adjusting your filters or
+                <a href="{% url 'livestock:marketplace' %}" class="text-decoration-none">view all animals</a>.
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if request.user.is_authenticated and request.user.userprofile.user_type == 'buyer' %}
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="alert alert-info d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-2"><i class="fas fa-info-circle me-2"></i>Track Your Orders</h5>
+                    <p class="mb-0">View your purchase history, order status, and manage pending payments.</p>
+                </div>
+                <a href="{% url 'livestock:order_history' %}" class="btn btn-info btn-lg flex-shrink-0 ms-4">
+                    <i class="fas fa-shopping-cart me-2"></i>My Orders
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .item-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+    }
+
+    .item-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    a.text-decoration-none {
+        color: inherit;
+    }
+
+    a.text-decoration-none:hover {
+        color: inherit;
+    }
+
+    .alert-info {
+        border: 2px solid #17a2b8;
+        border-radius: 8px;
+        background-color: rgba(23, 162, 184, 0.1);
+    }
+
+    .alert-info h5 {
+        color: #117a8b;
+        margin-bottom: 0.5rem;
+    }
+
+    .alert-info p {
+        color: #117a8b;
+    }
+
+    .card-header {
+        background-color: #f8f9fa !important;
+    }
+
+    .form-select,
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
+    }
+
+    .form-select:focus,
+    .form-control:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+</style>
+{% endblock content %}

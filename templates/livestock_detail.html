@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ item.species.species_name }} - Livestock Details{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-5">
+
+        <!-- LEFT: IMAGES -->
+        <div class="col-lg-6">
+            {% if item.images.first %}
+            <div class="bg-light rounded-3 mb-3" style="max-height: 400px; overflow: hidden;">
+                <img src="{{ item.images.first.image.url }}" alt="{{ item.species.species_name }}"
+                    style="width: 100%; height: auto; object-fit: contain;">
+            </div>
+
+
+            <div class="row g-2">
+                {% for image in item.images.all %}
+                <div class="col-3">
+                    <div class="bg-light rounded overflow-hidden" style="aspect-ratio: 4 / 3;">
+                        <img src="{{ image.image.url }}" alt="Livestock"
+                            style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% else %}
+            <div class="ratio ratio-1x1 bg-light rounded-3 d-flex align-items-center justify-content-center">
+                <i class="fas fa-paw text-muted fs-1 opacity-25"></i>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- RIGHT: DETAILS -->
+        <div class="col-lg-6">
+
+            <span class="badge bg-success mb-3">
+                <i class="fas fa-check-circle me-1"></i> Verified
+            </span>
+
+            <h1 class="fw-bold">
+                {{ item.breed.breed_name|default:item.species.species_name }}
+            </h1>
+
+            <h3 class="text-success fw-bold mb-4">
+                {% if item.price %}
+                RWF {{ item.price|floatformat:0 }}
+                {% else %}
+                Contact for Price
+                {% endif %}
+            </h3>
+
+            <!-- INFO GRID -->
+            <div class="row g-3 border-bottom pb-4 mb-4">
+                <div class="col-6">
+                    <small class="text-muted">Species</small>
+                    <div class="fw-bold">{{ item.species.species_name }}</div>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted">Breed</small>
+                    <div class="fw-bold">{{ item.breed.breed_name|default:"Not specified" }}</div>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted">Gender</small>
+                    <div class="fw-bold">{{ item.gender|title }}</div>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted">Age</small>
+                    <div class="fw-bold">{{ item.age }} months</div>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted">Weight</small>
+                    <div class="fw-bold">{{ item.weight|default:"N/A" }} kg</div>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted">Tag ID</small>
+                    <div class="fw-bold">{{ item.tag_id|default:"Not tracked" }}</div>
+                </div>
+            </div>
+
+            {% if item.description %}
+            <div class="mb-4">
+                <h5 class="fw-bold">Description</h5>
+                <p class="text-muted">{{ item.description }}</p>
+            </div>
+            {% endif %}
+
+            <!-- ACTIONS -->
+            <div class="d-grid gap-2 mb-5">
+                {% if request.user.is_authenticated and request.user.userprofile.user_type == 'buyer' %}
+
+                <form method="POST" action="{% url 'livestock:add_to_order' item.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-lg fw-bold">
+                        <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                    </button>
+                </form>
+
+                <!-- <form method="POST" action="{% url 'livestock:add_to_wishlist' item.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success btn-lg fw-bold">
+                        <i class="fas fa-heart me-2"></i>Save to Wishlist
+                    </button>
+                </form> -->
+
+                {% elif not request.user.is_authenticated %}
+                <a href="{% url 'login' %}" class="btn btn-success btn-lg fw-bold">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login to Buy
+                </a>
+                {% else %}
+                <div class="alert alert-info">
+                    You are logged in as a farmer. Switch to a buyer account to purchase.
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- FARMER INFO -->
+            <div class="card border-success">
+                <div class="card-header bg-success text-white fw-bold">
+                    <i class="fas fa-user-tie me-2"></i>Farmer Information
+                </div>
+                <div class="card-body">
+                    <p><strong>Farm:</strong> {{ item.farmer.farm_name|default:"Not provided" }}</p>
+                    <p><strong>Location:</strong> {{ item.farmer.farm_location|default:"Not provided" }}</p>
+                    <p><strong>Contact:</strong> {{ item.farmer.contact_person|default:"Not provided" }}</p>
+
+                    {% if item.farmer.user.userprofile.phone_number %}
+                    <a href="https://wa.me/{{ item.farmer.user.userprofile.phone_number|slice:'1:' }}" target="_blank"
+                        class="btn btn-outline-success w-100">
+                        <i class="fab fa-whatsapp me-2"></i>Contact on WhatsApp
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

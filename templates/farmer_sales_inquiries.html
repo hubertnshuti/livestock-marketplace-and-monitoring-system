@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Incoming Inquiries - Farmer Dashboard{% endblock title %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark">Incoming Sales Inquiries</h2>
+            <p class="text-muted mb-0">Review requests and sales from buyers.</p>
+        </div>
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            {% if inquiries %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4 py-3">Order #</th>
+                            <th>Date</th>
+                            <th>Livestock</th>
+                            <th>Buyer</th>
+                            <th>Price Offer</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in inquiries %}
+                        <tr>
+                            <td class="ps-4 fw-bold">#{{ item.order.order_id }}</td>
+                            <td>{{ item.order.order_date|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if item.livestock.images.first %}
+                                        <img src="{{ item.livestock.images.first.image.url }}"
+                                             class="rounded me-2"
+                                             width="40" height="40"
+                                             style="object-fit: cover;">
+                                    {% else %}
+                                        <div class="bg-light rounded me-2 d-flex align-items-center justify-content-center"
+                                             style="width: 40px; height: 40px;">
+                                            <i class="fas fa-paw text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <span class="fw-medium d-block">{{ item.livestock.species.species_name }}</span>
+                                        <small class="text-muted">Tag: {{ item.livestock.tag_id }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <i class="fas fa-user-circle text-muted me-1"></i>
+                                {{ item.order.buyer.user.username }}
+                            </td>
+                            <td class="fw-bold text-success">
+                                RWF {{ item.unit_price_at_time }}
+                            </td>
+
+                            <td>
+                                {% if item.order.payment_status == 'paid' %}
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle me-1"></i> Paid Online
+                                    </span>
+                                {% elif item.order.order_status == 'confirmed' %}
+                                    <span class="badge bg-success">Sold & Delivered</span>
+                                {% elif item.order.order_status == 'approved' %}
+                                    <span class="badge bg-primary">Waiting for Payment</span>
+                                {% elif item.order.order_status == 'cancelled' %}
+                                    <span class="badge bg-danger">Cancelled</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Action Required</span>
+                                {% endif %}
+                            </td>
+
+                            <td class="text-end pe-4">
+                                <div class="d-flex gap-2 justify-content-end">
+
+                                    <!-- View Details button (shows buyer contact + address) -->
+                                    <button type="button"
+                                            class="btn btn-sm btn-info text-white"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#inquiryModal{{ item.pk }}">
+                                        <i class="fas fa-eye me-1"></i> Details
+                                    </button>
+
+                                    {% if item.order.payment_status == 'paid' or item.order.order_status == 'confirmed' %}
+                                        <button class="btn btn-sm btn-light border" disabled>
+                                            <i class="fas fa-check-double text-success me-1"></i> Order Complete
+                                        </button>
+
+                                    {% elif item.order.order_status == 'approved' %}
+                                        <span class="text-muted small fst-italic me-2">Waiting for buyer...</span>
+                                        <button class="btn btn-sm btn-light border" disabled>
+                                            <i class="fas fa-clock text-primary me-1"></i> Approved
+                                        </button>
+
+                                    {% elif item.order.order_status == 'cancelled' %}
+                                        <span class="text-muted small">Cancelled</span>
+
+                                    {% else %}
+                                        <form method="POST" action="{% url 'livestock:approve_inquiry' pk=item.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-success" title="Accept Inquiry">
+                                                <i class="fas fa-check me-1"></i> Accept
+                                            </button>
+                                        </form>
+
+                                        <form method="POST" action="{% url 'livestock:reject_inquiry' pk=item.pk %}">
+                                            {% csrf_token %}
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    title="Reject Inquiry"
+                                                    onclick="return confirm('Are you sure you want to reject this offer?');">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Modal with buyer contact + address -->
+                        <div class="modal fade" id="inquiryModal{{ item.pk }}" tabindex="-1"
+                             aria-labelledby="inquiryModalLabel{{ item.pk }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"
+                                            id="inquiryModalLabel{{ item.pk }}">
+                                            Inquiry Details – Order #{{ item.order.order_id }}
+                                        </h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Buyer:</strong> {{ item.order.buyer.user.username }}</p>
+                                        <p><strong>Phone:</strong> {{ item.order.contact_phone|default:"Not provided" }}</p>
+                                        <p><strong>Delivery Address:</strong><br>
+                                            {{ item.order.delivery_address|linebreaksbr|default:"Not provided" }}
+                                        </p>
+                                        <hr>
+                                        <p><strong>Livestock:</strong> {{ item.livestock.species.species_name }}
+                                            {% if item.livestock.tag_id %}
+                                                (Tag: {{ item.livestock.tag_id }})
+                                            {% endif %}
+                                        </p>
+                                        <p><strong>Offered Price:</strong> RWF {{ item.unit_price_at_time }}</p>
+                                        <p><strong>Order Status:</strong> {{ item.order.order_status|title }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button"
+                                                class="btn btn-secondary"
+                                                data-bs-dismiss="modal">
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <div class="mb-3">
+                    <i class="fas fa-inbox text-muted fs-1 opacity-25"></i>
+                </div>
+                <h5 class="text-muted">No new inquiries.</h5>
+                <p class="text-muted small mb-4">
+                    When a buyer wants to purchase your livestock, it will appear here.
+                </p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

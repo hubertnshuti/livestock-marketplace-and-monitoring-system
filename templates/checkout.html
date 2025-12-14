@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-success text-white py-3">
+                    <h4 class="mb-0 fw-bold">Finalize Inquiry Details</h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted">Please provide contact details so the farmer can arrange delivery.</p>
+                    
+                    <div class="bg-light p-3 rounded mb-4">
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Total Order Value:</span>
+                            <span class="text-success fw-bold">RWF {{ order.total_amount|intcomma }}</span>
+                        </div>
+                    </div>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Phone Number for Delivery</label>
+                            {{ form.contact_phone }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Delivery Location / Address</label>
+                            {{ form.delivery_address }}
+                            <div class="form-text">Be specific (District, Sector, nearby landmark).</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 btn-lg mt-3">
+                            Send Inquiry <i class="fas fa-paper-plane ms-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

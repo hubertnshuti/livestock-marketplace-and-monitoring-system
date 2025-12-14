@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - Livestock Marketplace{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="text-center fw-bold mb-4 text-success">Welcome Back</h2>
+                    <p class="text-center text-muted mb-5">Sign in to access your dashboard and the marketplace.</p>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label fw-medium">Username</label>
+                            {{ form.username }}
+                            {% for error in form.username.errors %}<small class="text-danger d-block">{{ error }}</small>{% endfor %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.password.id_for_label }}" class="form-label fw-medium">Password</label>
+                            {{ form.password }}
+                            {% for error in form.password.errors %}<small class="text-danger d-block">{{ error }}</small>{% endfor %}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success fw-bold py-2">
+                                Log In
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="mt-4 text-center">
+                        <p class="text-muted small m-0">
+                            Don't have an account? 
+                            <a href="{% url 'register' %}" class="text-success text-decoration-none fw-medium">Register here</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

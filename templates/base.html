@@ -1,0 +1,404 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ItungoHub - National Livestock Marketplace{% endblock title %}</title>
+
+    <!-- Favicon (place favicon.png in static/assets/) -->
+    <link rel="icon" type="image/png" href="{% static 'assets/favicon.png' %}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Global Styles */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        .brand-logo,
+        .footer-title,
+        .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- HEADER (Green & Transparent) --- */
+        .header-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            color: white;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        body:not(.home-page) .header-wrapper {
+            position: relative;
+            background: #011f13 !important;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .bottom-nav {
+            display: flex;
+            justify-content: flex-end;
+            gap: 30px;
+            padding: 15px 5%;
+        }
+
+        .nav-link-custom {
+            color: white;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-link-custom:hover {
+            color: #10b981;
+        }
+
+        .nav-link-custom::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #10b981;
+            transition: width 0.3s;
+        }
+
+        .nav-link-custom:hover::after {
+            width: 100%;
+        }
+
+        .auth-btn {
+            padding: 8px 20px;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-signup {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .btn-signup:hover {
+            background-color: #0e8a60;
+            color: white;
+        }
+
+        .btn-login {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: white;
+            margin-right: 10px;
+        }
+
+        .btn-login:hover {
+            background-color: white;
+            color: #011f13;
+        }
+
+        .main-footer {
+            background-color: #011f13;
+            color: white;
+            padding: 80px 0 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-footer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('https://images.unsplash.com/photo-1523741543316-beb7fc7023d8?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-title {
+            color: #10b981;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        .back-to-top-btn {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .back-to-top-btn:hover {
+            background-color: white;
+            color: #011f13;
+        }
+
+        main {
+            flex: 1;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body id="top" class="{% block body_class %}{% endblock %}">
+
+    {% block navbar %}
+    <header class="header-wrapper">
+        <div class="top-nav">
+            <a href="{% url 'home' %}" class="d-flex align-items-center text-decoration-none text-white">
+                <!-- Image logo (put itungohub-logo.png in static/assets/) -->
+                <!-- <img src="{% static 'assets/itungohub-logo.png' %}"
+                     alt="ItungoHub livestock logo"
+                     class="me-2"
+                     style="height: 40px; width: auto;"> -->
+
+                <!-- Web-related globe icon and brand text -->
+                <span class="d-flex align-items-center">
+                    <i class="fas fa-globe" style="color: #10b981; font-size: 1.6rem; margin-right: 0.4rem;"></i>
+                    <span class="serif-font fw-bold fs-4">Itungo<span style="color: #10b981;">Hub</span></span>
+                </span>
+            </a>
+
+            <div class="d-none d-lg-flex align-items-center">
+                {% if user.is_authenticated %}
+                <div class="dropdown">
+                    <button
+                        class="btn btn-link text-white text-decoration-none dropdown-toggle fw-bold d-flex align-items-center"
+                        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                        {% if request.user.userprofile.profile_picture %}
+                        <img src="{{ request.user.userprofile.profile_picture.url }}" alt="Avatar"
+                            class="rounded-circle me-2" style="width: 28px; height: 28px; object-fit: cover;">
+                        {% else %}
+                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-2"
+                            style="width: 28px; height: 28px;">
+                            <i class="fas fa-user text-muted"></i>
+                        </div>
+                        {% endif %}
+
+                        <span>{{ request.user.username }}</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li>
+                            <a class="dropdown-item" href="{% url 'profile' %}">
+                                <i class="fas fa-user me-2"></i>My Profile
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        {% if request.user.userprofile.user_type == 'farmer' %}
+                        <li>
+                            <a class="dropdown-item" href="{% url 'dashboard' %}">
+                                <i class="fas fa-tractor me-2"></i>Farm Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'livestock:livestock_add' %}">
+                                <i class="fas fa-plus me-2"></i>Add Livestock
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'livestock:sales_inquiries' %}">
+                                <i class="fas fa-inbox me-2"></i>Sales Inquiries
+                            </a>
+                        </li>
+                        {% else %}
+                        <li>
+                            <a class="dropdown-item" href="{% url 'dashboard' %}">
+                                <i class="fas fa-chart-pie me-2"></i>Buyer Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'livestock:marketplace' %}">
+                                <i class="fas fa-store me-2"></i>Marketplace
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'livestock:order_history' %}">
+                                <i class="fas fa-history me-2"></i>My Orders
+                            </a>
+                        </li>
+                        {% endif %}
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <form action="{% url 'logout' %}" method="post" class="d-inline w-100">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                {% else %}
+                <a href="{% url 'login' %}" class="auth-btn btn-login text-decoration-none">Log In</a>
+                <a href="{% url 'register' %}" class="auth-btn btn-signup text-decoration-none">Sign Up</a>
+                {% endif %}
+            </div>
+
+            <button class="navbar-toggler d-lg-none text-white fs-2 border-0 bg-transparent">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <div class="bottom-nav d-none d-lg-flex">
+            <a href="{% url 'home' %}" class="nav-link-custom">Home</a>
+            <a href="{% url 'livestock:marketplace' %}" class="nav-link-custom">Marketplace</a>
+
+            {% if user.is_authenticated %}
+            {% if request.user.userprofile.user_type == 'farmer' %}
+            <a href="{% url 'for_farmers' %}" class="nav-link-custom">For Farmers</a>
+            {% elif request.user.userprofile.user_type == 'buyer' %}
+            <a href="{% url 'for_buyers' %}" class="nav-link-custom">For Buyers</a>
+            {% endif %}
+            {% else %}
+            <a href="{% url 'for_farmers' %}" class="nav-link-custom">For Farmers</a>
+            <a href="{% url 'for_buyers' %}" class="nav-link-custom">For Buyers</a>
+            {% endif %}
+
+            <a href="{% url 'about' %}" class="nav-link-custom">About</a>
+            <a href="{% url 'contact' %}" class="nav-link-custom">Contact</a>
+        </div>
+    </header>
+    {% endblock navbar %}
+
+    <main>
+        {% block content %}{% endblock content %}
+    </main>
+
+    {% block footer %}
+    <footer class="main-footer">
+        <div class="container footer-content">
+            <div class="row g-5 mb-5">
+                <div class="col-lg-4 col-md-6">
+                    <!-- Web-related globe icon and brand text -->
+                    <span class="d-flex align-items-center mb-4">
+                        <i class="fas fa-globe" style="color: #10b981; font-size: 1.6rem; margin-right: 0.4rem;"></i>
+                        <span class="serif-font fw-bold fs-4">Itungo<span style="color: #10b981;">Hub</span></span>
+                    </span>
+                    <p class="text-white-50 mb-4">
+                        Kigali, Rwanda<br>Telephone: +250 780354633
+                    </p>
+                    <a href="{% url 'contact' %}" class="footer-link text-uppercase fw-bold">Contact Us</a>
+                    <a href="https://www.google.com/maps/place/KN+7+Ave,+Kigali,+Rwanda/"
+                        class="footer-link text-uppercase fw-bold" target="_blank" rel="noopener">
+                        Maps & Directions
+                    </a>
+                </div>
+
+                <div class="col-lg-4 col-md-6 ps-lg-5">
+                    <h4 class="footer-title">Navigate</h4>
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="{% url 'for_farmers' %}" class="footer-link">For Farmers</a>
+                            <a href="{% url 'for_buyers' %}" class="footer-link">For Buyers</a>
+                            <a href="{% url 'livestock:marketplace' %}" class="footer-link">Marketplace</a>
+                        </div>
+                        <div class="col-6">
+                            <a href="{% url 'about' %}" class="footer-link">About Us</a>
+                            <a href="#" class="footer-link">News & Insights</a>
+                            <!-- <a href="#" class="footer-link">Support</a> -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-12">
+                    <h4 class="footer-title">Our Mission</h4>
+                    <p class="text-white-50">
+                        ItungoHub stands as Rwanda's premier digital livestock platform. We date back to a vision of
+                        modernizing agriculture, connecting ties between rural farmers and national markets.
+                    </p>
+                    <a href="{% url 'about' %}"
+                        class="btn btn-outline-light text-uppercase fw-bold mt-3 px-4 py-2 rounded-0">
+                        Our History
+                    </a>
+                </div>
+            </div>
+
+            <div
+                class="d-flex justify-content-between align-items-center border-top border-secondary pt-4 flex-wrap gap-3">
+                <a href="#top" class="back-to-top-btn">
+                    <i class="fas fa-arrow-up me-2"></i> Back to Top
+                </a>
+                <div class="d-flex gap-4 flex-wrap">
+                    <a href="{% url 'disclaimer' %}" class="footer-link small text-uppercase">Disclaimer</a>
+                    <a href="{% url 'privacy_policy' %}" class="footer-link small text-uppercase">Privacy Policy</a>
+                    <a href="{% url 'terms_of_use' %}" class="footer-link small text-uppercase">Terms of Use</a>
+                </div>
+
+                <p class="text-white-50 small m-0">© 2025 ItungoHub. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    {% endblock footer %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>
