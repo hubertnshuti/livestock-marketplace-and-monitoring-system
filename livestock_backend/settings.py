@@ -1,3 +1,6 @@
+import os
+import dj_database_url
+
 """
 Django settings for livestock_backend project.
 
@@ -47,6 +50,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -125,3 +129,21 @@ LOGOUT_REDIRECT_URL = 'home'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# --- PRODUCTION SETTINGS ---
+
+# 1. Hosts: Allow the app to run on Render
+ALLOWED_HOSTS = ['*']
+
+# 2. Static Files: Tell Whitenoise where to put files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# 3. Database: Switch to PostgreSQL on Render, keep SQLite locally
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600
+        )
+    }
