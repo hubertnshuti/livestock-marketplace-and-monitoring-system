@@ -1,3 +1,5 @@
+# Views handling livestock listing and detail pages
+
 import requests
 import uuid
 from django.conf import settings
