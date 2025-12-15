@@ -1,4 +1,4 @@
-# 🐄 ItungoHub: National Livestock Marketplace Management System
+# 🐄 ItungoHub: Livestock Marketplace System
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
